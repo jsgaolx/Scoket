@@ -81,7 +81,7 @@ void main()
 			printf("%s\n", recvBuf);
 			send(sockConn, "数据已接收", sizeof(buf), 0);
 		}
-
+		std::cout << "链接关闭" << std::endl;
 		closesocket(sockConn);
 	}
 
