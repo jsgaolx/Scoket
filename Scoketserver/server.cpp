@@ -24,13 +24,15 @@ void main()
 
 	//创建套接字
 	SOCKET sockClient = socket(AF_INET, SOCK_STREAM, 0);
-	if (SOCKET_ERROR == sockClient){
+	if (SOCKET_ERROR == sockClient)
+	{
 		printf("Socket() error:%d", WSAGetLastError());
 		return;
 	}
 
 	//向服务器发出连接请求
-	if (connect(sockClient, (struct  sockaddr*)&addrSrv, sizeof(addrSrv)) == INVALID_SOCKET){
+	if (connect(sockClient, (struct  sockaddr*)&addrSrv, sizeof(addrSrv)) == INVALID_SOCKET)
+	{
 		printf("Connect failed:%d", WSAGetLastError());
 		return;
 	}
@@ -38,16 +40,21 @@ void main()
 	{
 		//接收数据
 		recv(sockClient, buff, sizeof(buff), 0);
+		std::cout << "接收服务端消息" << std::endl;
 		printf("%s\n", buff);
 	}
+	recv(sockClient, buff, sizeof(buff), 0);
+	std::cout << buff << std::endl;
+
 	char buffer[1024];
 	//发送数据
-	int i = 0;
-	while (std::cin >> buffer)
-	{
-		send(sockClient, buffer, sizeof(buff), 0);
-		i++;
-	}
+	int i = 1;
+	std::cout << "发送服务端消息" << std::endl;
+	std::cin >> buffer;
+	send(sockClient, buffer, sizeof(buffer), i);
+
+	recv(sockClient, buff, sizeof(buff), 0);
+	std::cout << buff << std::endl;
 
 	//关闭套接字
 	closesocket(sockClient);

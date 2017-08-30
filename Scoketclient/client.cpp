@@ -1,9 +1,14 @@
 #include <WinSock2.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 #pragma comment(lib, "ws2_32.lib")
 
+/*
+recv 函数
+返回值<0：出错，=0：连接关闭，>0接收到数据大小。
+*/
 void main()
 {
 	WSADATA wsaData;
@@ -49,21 +54,33 @@ void main()
 		}
 		printf_s("Accept client IP:[%s]\n", inet_ntoa(addrClient.sin_addr));
 
-		printf_s("1111");
 		//发送数据
 		int iSend = send(sockConn, buf, sizeof(buf), 0);
-
 
 		if (iSend == SOCKET_ERROR){
 			printf("send failed");
 			break;
 		}
 
+		std::cout << "请输入发送的消息" << std::endl;
+		std::cin >> buf;
+		iSend = send(sockConn, buf, sizeof(buf), 0);
+		if (iSend == SOCKET_ERROR)
+		{
+			std::cout << "发送失败" << std::endl;
+			break;
+		}
+
+		std::cout << "接收的消息" << std::endl;
 		char recvBuf[100];
 		memset(recvBuf, 0, sizeof(recvBuf));
+
 		// 		//接收数据
-		recv(sockConn, recvBuf, sizeof(recvBuf), 0);
-		printf("%s\n", recvBuf);
+		if (recv(sockConn, recvBuf, sizeof(recvBuf), 0) > 0)
+		{
+			printf("%s\n", recvBuf);
+			send(sockConn, "数据已接收", sizeof(buf), 0);
+		}
 
 		closesocket(sockConn);
 	}
